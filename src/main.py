@@ -2,9 +2,8 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
-
-URL = "https://www.easyfuture.pt/artigos"
-DATA_ID_HEADER = 'pgi'
+from utils import *
+from datetime import date
 
 posts = []
 
@@ -19,6 +18,7 @@ class Post:
         self.author = ''
         self.views = 0
         self.likes = 0
+        self.publication_date = date.today()
 
     def get_id(self):
         return self.postID
@@ -38,6 +38,9 @@ class Post:
     def get_likes(self):
         return self.likes
     
+    def get_publication_date(self):
+        return self.publication_date
+    
     def set_title(self, title):
         self.title = title
 
@@ -50,10 +53,14 @@ class Post:
     def set_author(self, author):
         self.author = author
 
+    def set_publication_date(self, publication_date):
+        self.publication_date = publication_date
+
     def __str__(self) -> str:
-        return '[{}]\nTitle: {}\nAuthor: {}\nViews: {}\nLikes: {}'.format(
+        return '[{}]\n\tTitle: {}\n\tPublication Date: {}\n\tAuthor: {}\n\tViews: {}\n\tLikes: {}\n'.format(
                 self.data_id, 
                 self.title,
+                self.publication_date,
                 self.author,
                 self.views,
                 self.likes
@@ -74,17 +81,19 @@ for section in soup.findAll('div', id='pro-gallery-margin-container-pro-blog'):
 
         index += 1
 
-        
 for post in posts:
     post_data = soup.findAll('div', id=post.get_data_id())
     for data in post_data:
         post_title = data.attrs.get('aria-label').rstrip()
         post_author = data.find_all('span', {'data-hook': 'user-name'})[0].text.rstrip()
+        post_publication_date = data.find_all('span', {'data-hook': 'time-ago'})[0].text.rstrip()
         post_views = data.find_all('span', {'class': 'eYQJQu'})[0].text
         post_likes = data.find_all('span', {'class': 'FYRNvd like-button-with-count__like-count'})[0].text
 
         post.set_title(post_title)
+        post.set_publication_date(parse_date(post_publication_date))
         post.set_author(post_author)
         post.set_views(int(post_views))
         post.set_likes(int(post_likes))
+
         print(post)
