@@ -4,6 +4,9 @@ import pandas as pd
 import requests
 from utils import *
 from datetime import date
+import csv
+import os
+
 class Post:
     def __init__(self, id, data_id):
         self.postID = id
@@ -62,6 +65,18 @@ class Post:
 
 posts = []
 
+current_date = date.today()
+out_path = r'out\{}\{}'.format(current_date.year, current_date.month)
+if not os.path.exists(out_path):
+    os.makedirs(out_path)
+
+out_file_path = r'{}\{}.csv'.format(out_path, current_date.day)
+f = open(out_file_path, 'w', newline='')
+writer = csv.writer(f, delimiter=';')
+
+# Write header to csv file
+writer.writerow(CSV_HEADER)
+
 page = requests.get(BASE_URL)
 soup = BeautifulSoup(page.content, "html.parser")
 num_pages = get_num_pages(soup)
@@ -100,4 +115,13 @@ for num_page in range(1, num_pages+1):
             post.set_views(int(post_views.replace('.', '')))
             post.set_likes(int(post_likes.replace('.', '')))
 
-            print(post)
+        # Write the post data in the csv file
+        writer.writerow([
+            post.get_title(),
+            post.get_publication_date(),
+            post.get_author(),
+            post.get_views(),
+            post.get_likes()
+        ])
+
+f.close()
