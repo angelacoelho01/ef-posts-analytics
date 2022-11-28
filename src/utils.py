@@ -1,6 +1,9 @@
 from datetime import date, timedelta
+import requests
 
-URL = "https://www.easyfuture.pt/artigos"
+# Constants
+BASE_URL = "https://www.easyfuture.pt/artigos"
+PAGE_URL = BASE_URL + "/page/"
 DATA_ID_HEADER = 'pgi'
 MONTHS = {
     'jan.': 1,
@@ -16,6 +19,11 @@ MONTHS = {
     'nov.': 11,
     'dez.': 12
 }
+
+def get_num_pages(page_content):
+    last_page_section = page_content.find_all('a', {'data-hook': 'pagination__last'})[0]
+    last_page_href = last_page_section.attrs.get('href').split('/')
+    return int(last_page_href[-1])
 
 def parse_date(post_date):
     #current_date = 

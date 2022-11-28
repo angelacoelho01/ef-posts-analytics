@@ -4,12 +4,6 @@ import pandas as pd
 import requests
 from utils import *
 from datetime import date
-
-posts = []
-
-page = requests.get(URL)
-soup = BeautifulSoup(page.content, "html.parser")
-
 class Post:
     def __init__(self, id, data_id):
         self.postID = id
@@ -66,34 +60,44 @@ class Post:
                 self.likes
                 )
 
-# Get all posts 'data-id'
-index = 0
-for section in soup.findAll('div', id='pro-gallery-margin-container-pro-blog'):
-    for element in section:
-        post_id = element.attrs.get('data-id')
-        post_data_id = '{}{}_{}'.format(
-                DATA_ID_HEADER, 
-                post_id.replace('-', ''), 
-                str(index)
-                )
+posts = []
 
-        posts.append(Post(post_id, post_data_id))
+page = requests.get(BASE_URL)
+soup = BeautifulSoup(page.content, "html.parser")
+num_pages = get_num_pages(soup)
 
-        index += 1
+for num_page in range(1, num_pages+1):
+    current_page = requests.get(PAGE_URL + str(num_page))
+    soup =BeautifulSoup(current_page.content, "html.parser")
 
-for post in posts:
-    post_data = soup.findAll('div', id=post.get_data_id())
-    for data in post_data:
-        post_title = data.attrs.get('aria-label').rstrip()
-        post_author = data.find_all('span', {'data-hook': 'user-name'})[0].text.rstrip()
-        post_publication_date = data.find_all('span', {'data-hook': 'time-ago'})[0].text.rstrip()
-        post_views = data.find_all('span', {'class': 'eYQJQu'})[0].text
-        post_likes = data.find_all('span', {'class': 'FYRNvd like-button-with-count__like-count'})[0].text
+    # Get all posts 'data-id'
+    index = 0
+    for section in soup.findAll('div', id='pro-gallery-margin-container-pro-blog'):
+        for element in section:
+            post_id = element.attrs.get('data-id')
+            post_data_id = '{}{}_{}'.format(
+                    DATA_ID_HEADER, 
+                    post_id.replace('-', ''), 
+                    str(index)
+                    )
 
-        post.set_title(post_title)
-        post.set_publication_date(parse_date(post_publication_date))
-        post.set_author(post_author)
-        post.set_views(int(post_views))
-        post.set_likes(int(post_likes))
+            posts.append(Post(post_id, post_data_id))
 
-        print(post)
+            index += 1
+
+    for post in posts:
+        post_data = soup.findAll('div', id=post.get_data_id())
+        for data in post_data:
+            post_title = data.attrs.get('aria-label').rstrip()
+            post_author = data.find_all('span', {'data-hook': 'user-name'})[0].text.rstrip()
+            post_publication_date = data.find_all('span', {'data-hook': 'time-ago'})[0].text.rstrip()
+            post_views = data.find_all('span', {'class': 'eYQJQu'})[0].text
+            post_likes = data.find_all('span', {'class': 'FYRNvd like-button-with-count__like-count'})[0].text
+
+            post.set_title(post_title)
+            post.set_publication_date(parse_date(post_publication_date))
+            post.set_author(post_author)
+            post.set_views(int(post_views.replace('.', '')))
+            post.set_likes(int(post_likes.replace('.', '')))
+
+            print(post)
