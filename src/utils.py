@@ -5,7 +5,7 @@ import requests
 BASE_URL = "https://www.easyfuture.pt/artigos"
 PAGE_URL = BASE_URL + "/page/"
 DATA_ID_HEADER = 'pgi'
-CSV_HEADER = ['title', 'publication_date', 'author', 'views', 'likes']
+CSV_HEADER = ['Title', 'Publication Date', 'Author', 'Views', 'Likes']
 MONTHS = {
     'jan.': 1,
     'fev.': 2,
