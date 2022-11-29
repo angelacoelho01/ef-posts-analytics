@@ -45,7 +45,9 @@ def add_conditional_formatting_rules(service, sheet_id):
                             },
                             'format': {
                                 'backgroundColor': {
-                                    'red': 0.8
+                                    'red': 0.95,
+                                    'green': 0.8,
+                                    'blue': 0.8
                                 }
                             }
                         }
