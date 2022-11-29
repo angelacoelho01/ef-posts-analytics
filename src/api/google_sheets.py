@@ -2,8 +2,11 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from utils import *
 import pandas as pd
+from datetime import date
 
-df = pd.read_csv(r'out\2022\11\29.csv', delimiter=';', encoding=ENCODING)
+current_date = date.today()
+
+df = pd.read_csv(r'out\{}\{}\{}.csv'.format(current_date.year, current_date.month, current_date.day), delimiter=';', encoding=ENCODING)
 df.sort_values(by='Data', ascending=False, inplace=True)
 
 values = []
