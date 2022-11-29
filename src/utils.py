@@ -2,10 +2,10 @@ from datetime import date, timedelta
 import requests
 
 # Constants
-BASE_URL = "https://www.easyfuture.pt/artigos"
-PAGE_URL = BASE_URL + "/page/"
-DATA_ID_HEADER = 'pgi'
-CSV_HEADER = ['Title', 'Publication Date', 'Author', 'Views', 'Likes']
+BASE_URL = r'https://www.easyfuture.pt/artigos'
+PAGE_URL = BASE_URL + r'/page/'
+DATA_ID_HEADER = r'pgi'
+CSV_HEADER = ['Categoria', 'Título', 'Autor', 'Visualizações', 'Gostos', 'Data']
 MONTHS = {
     'jan.': 1,
     'fev.': 2,

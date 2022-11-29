@@ -12,6 +12,7 @@ class Post:
         self.postID = id
         self.data_id = data_id
         self.title = ''
+        self.category = ''
         self.author = ''
         self.views = 0
         self.likes = 0
@@ -25,6 +26,9 @@ class Post:
     
     def get_title(self):
         return self.title
+
+    def get_category(self):
+        return self.category
     
     def get_author(self):
         return self.author
@@ -41,6 +45,9 @@ class Post:
     def set_title(self, title):
         self.title = title
 
+    def set_category(self, category):
+        self.category = category
+
     def set_views(self, views):
         self.views = views
 
@@ -54,9 +61,10 @@ class Post:
         self.publication_date = publication_date
 
     def __str__(self) -> str:
-        return '[{}]\n\tTitle: {}\n\tPublication Date: {}\n\tAuthor: {}\n\tViews: {}\n\tLikes: {}\n'.format(
+        return '[{}]\n\tTitle: {}\n\tCategory: {}\n\tPublication Date: {}\n\tAuthor: {}\n\tViews: {}\n\tLikes: {}\n'.format(
                 self.data_id, 
                 self.title,
+                self.category,
                 self.publication_date,
                 self.author,
                 self.views,
@@ -64,18 +72,6 @@ class Post:
                 )
 
 posts = []
-
-current_date = date.today()
-out_path = r'out\{}\{}'.format(current_date.year, current_date.month)
-if not os.path.exists(out_path):
-    os.makedirs(out_path)
-
-out_file_path = r'{}\{}.csv'.format(out_path, current_date.day)
-f = open(out_file_path, 'w', newline='')
-writer = csv.writer(f, delimiter=';')
-
-# Write header to csv file
-writer.writerow(CSV_HEADER)
 
 page = requests.get(BASE_URL)
 soup = BeautifulSoup(page.content, "html.parser")
@@ -104,24 +100,42 @@ for num_page in range(1, num_pages+1):
         post_data = soup.findAll('div', id=post.get_data_id())
         for data in post_data:
             post_title = data.attrs.get('aria-label').rstrip()
+            post_category = data.find_all('a', {'class': 'pratMU dqpczu'})
             post_author = data.find_all('span', {'data-hook': 'user-name'})[0].text.rstrip()
             post_publication_date = data.find_all('span', {'data-hook': 'time-ago'})[0].text.rstrip()
             post_views = data.find_all('span', {'class': 'eYQJQu'})[0].text
             post_likes = data.find_all('span', {'class': 'FYRNvd like-button-with-count__like-count'})[0].text
-
+            
             post.set_title(post_title)
+            post.set_category(post_category[0].text.rstrip() if len(post_category) != 0 else 'Não especificado')
             post.set_publication_date(parse_date(post_publication_date))
             post.set_author(post_author)
             post.set_views(int(post_views.replace('.', '')))
             post.set_likes(int(post_likes.replace('.', '')))
 
-        # Write the post data in the csv file
-        writer.writerow([
-            post.get_title(),
-            post.get_publication_date(),
-            post.get_author(),
-            post.get_views(),
-            post.get_likes()
-        ])
+current_date = date.today()
+out_path = r'out\{}\{}'.format(current_date.year, current_date.month)
+if not os.path.exists(out_path):
+    os.makedirs(out_path)
+
+out_file_path = r'{}\{}.csv'.format(out_path, current_date.day)
+f = open(out_file_path, 'w', newline='')
+writer = csv.writer(f, delimiter=';')
+
+# Write header to csv file
+writer.writerow(CSV_HEADER)
+
+for post in posts:
+    # Write the post data in the csv file
+    writer.writerow([
+        post.get_category(),
+        post.get_title(),
+        post.get_author(),
+        post.get_views(),
+        post.get_likes(),
+        post.get_publication_date()
+    ])
+
+
 
 f.close()
