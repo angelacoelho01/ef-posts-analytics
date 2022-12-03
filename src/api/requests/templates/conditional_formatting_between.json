@@ -1,0 +1,34 @@
+{
+    "requests":[{
+        "addConditionalFormatRule":{
+            "rule":{
+                "ranges":{
+                    "sheetId":"SHEET_ID",
+                    "startColumnIndex":"START_COLUMN_INDEX",
+                    "endColumnIndex":"END_COLUMN_INDEX",
+                    "startRowIndex":"START_ROW_INDEX",
+                    "endRowIndex":"END_ROW_INDEX"
+                },
+                "booleanRule":{
+                    "condition":{
+                        "type":"NUMBER_BETWEEN",
+                        "values":[{
+                            "userEnteredValue":"LOWER_BOUND"
+                        },
+                        {
+                            "userEnteredValue":"UPPER_BOUND"
+                        }]
+                    },
+                    "format":{
+                        "backgroundColor":{
+                            "red":"RED",
+                            "green":"GREEN",
+                            "blue":"BLUE"
+                        }
+                    }
+                }
+            },
+            "index":0
+        }
+    }]
+}
