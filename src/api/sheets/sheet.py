@@ -16,6 +16,9 @@ class Sheet:
     def set_values(self, values):
         self.values = values
 
+    def add_values(self, values):
+        self.values = self.values + values
+
     def add_sheet(self, service, spreadsheet_id):
         return AddSheet(self.name).send_request(service, spreadsheet_id)
 

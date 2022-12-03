@@ -1,0 +1,20 @@
+{
+    "requests":[
+        {
+            "updateSpreadsheetProperties":{
+                "properties":{
+                    "defaultFormat":{
+                        "backgroundColor":{
+                            "red":1,
+                            "green":0,
+                            "blue":0
+                        },
+                        "verticalAlignment":"MIDDLE",
+                        "wrapStrategy":"WRAP"
+                    }
+                },
+                "fields":"*"
+            }
+        }
+    ]
+}

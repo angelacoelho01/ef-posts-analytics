@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import date
 from utils import *
 from sheets.sheet import Sheet
+import json
 
 # Set up google sheets
 SERVICE_ACCOUNT_FILE = r'service_account.json'
@@ -36,9 +37,29 @@ authors = sorted(df['Autor'].unique())
 for author in authors:
     df_author = df.copy()
     df_author = df_author[df_author['Autor'] == author]
-    author_sheet = Sheet(author)
     df_author.drop('Autor', inplace=True, axis=1)
+
+    # Create a sheet for each author with the relative values
+    author_sheet = Sheet(author)
     author_sheet.set_values(get_values_from_dataset(df_author))
+
+    # Add total number of posts and the mean for views and likes
+    author_values = []
+
+    # Get the mean of views and likes
+    author_views_mean = df_author['Visualizações'].mean().round(0)
+    author_likes_mean = df_author['Gostos'].mean().round(0)
+
+    author_values += [
+        [],
+        [],
+        ['', 'Visualizações', 'Gostos'],
+        ['Média', author_views_mean, author_likes_mean],
+        [],
+        ['Número Total de Posts', len(df_author)]
+    ]
+
+    author_sheet.add_values(author_values)
     author_sheet.update_sheet(service, SPREADSHEET_ID)
 
 
