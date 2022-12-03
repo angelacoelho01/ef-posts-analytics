@@ -36,23 +36,13 @@ def list_replace_value(l, old, new):
     return x
 
 
-def add_sheets(service, google_sheet_id, sheet_name):
-    try:
-        request_body = {
-            'requests': [{
-                'addSheet': {
-                    'properties': {
-                        'title': sheet_name
-                    }
-                }
-            }]
-        }
+def get_values_from_dataset(df):
+    values = []
 
-        response = service.spreadsheets().batchUpdate(
-            spreadsheetId=google_sheet_id,
-            body=request_body
-        ).execute()
+    values.append(list(df.columns.values))
 
-        return response
-    except Exception as e:
-        print(e)
+    df.reset_index()
+    for _, row in df.iterrows():
+        values.append(list(row))
+
+    return values
