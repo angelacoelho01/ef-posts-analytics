@@ -1,9 +1,9 @@
 from utils import *
-import json
+from requests.request import Request
 
 DEFAULT_TEMPLATE_PATH = r'src\api\requests\templates\conditional_formatting_between.json'
 
-class Between:
+class IsBetween(Request):
     def __init__(self, sheet_id, start_column_index, end_column_index, start_row_index, end_row_index, 
                     lower_bound, upper_bound, color, template_path=DEFAULT_TEMPLATE_PATH,):
         self.sheet_id = sheet_id
@@ -41,9 +41,6 @@ class Between:
         # In RGB
         return self.color
 
-    def get_template_path(self):
-        return self.template_path
-
     def get_dict_attrs(self):
         return {
             'SHEET_ID': self.sheet_id,
@@ -57,25 +54,3 @@ class Between:
             'GREEN': self.color['green'],
             'BLUE': self.color['blue']
         }
-
-    def get_request_body(self):
-        with open(self.template_path, 'r+') as json_template:
-            request_body = json.load(json_template)
- 
-            for field, value in self.get_dict_attrs().items():
-                request_body = dict_replace_value(request_body, field, str(value))
-
-            return request_body
-
-    def send_request(self, service, spreadsheet_id):
-        self.get_request_body()
-        try:
-            response = service.spreadsheets().batchUpdate(
-                spreadsheetId=spreadsheet_id,
-                body=self.get_request_body()
-            ).execute()
-
-            return response
-        except Exception as e:
-            print(e)
-

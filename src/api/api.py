@@ -3,7 +3,8 @@ from googleapiclient.discovery import build
 import pandas as pd
 from datetime import date
 from utils import *
-from requests.conditional_formatting_between import *
+from requests.conditional_formatting_is_between import *
+from requests.add_sheet import *
 
 current_date = date.today()
 
@@ -33,8 +34,7 @@ print(service)
 
 SPREADSHEET_ID = '1KZs2dfexNPll47lPk-leztbwbDpPNicEVvNpNkzoaX0'
 
-red = Between(2021327580, 3, 4, 0, 999, 0, 200, '#ea9999')
-print(red.send_request(service, SPREADSHEET_ID))
+# TODO: Create sheets and conditional formatting rules
 
 worksheet_name = 'TEST!'
 
