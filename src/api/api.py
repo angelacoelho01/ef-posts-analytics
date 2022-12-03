@@ -24,12 +24,20 @@ current_date = date.today()
 df = pd.read_csv(r'out\{}\{}\{}.csv'.format(current_date.year, current_date.month, current_date.day), delimiter=';', encoding=ENCODING)
 df.sort_values(by='Data', ascending=False, inplace=True)
 
+# Get all the current sheets in the spreadsheet
+sheets = []
+sheets_properties = service.spreadsheets().get(
+        spreadsheetId=SPREADSHEET_ID
+    ).execute().get('sheets')
+
+for sheet_property in sheets_properties:
+    sheets.append(sheet_property.get('properties').get('title'))
+
 # Add general sheet
 # TODO: Create sheets and conditional formatting rules
 general_sheet = Sheet('Geral')
 general_sheet.set_values(get_values_from_dataset(df))
-general_sheet.update_sheet(service, SPREADSHEET_ID)
-
+general_sheet.update_sheet(service, SPREADSHEET_ID, sheets)
 
 # Add sheet by author
 authors = sorted(df['Autor'].unique())
@@ -60,7 +68,7 @@ for author in authors:
     ]
 
     author_sheet.add_values(author_values)
-    author_sheet.update_sheet(service, SPREADSHEET_ID)
+    author_sheet.update_sheet(service, SPREADSHEET_ID, sheets)
 
 
 # Add sheet by category
@@ -87,4 +95,4 @@ df_category = pd.merge(df_category, df_mean, on='Categoria')
 
 category_sheet = Sheet('Por Categoria')
 category_sheet.set_values(get_values_from_dataset(df_category))
-category_sheet.update_sheet(service, SPREADSHEET_ID)
+category_sheet.update_sheet(service, SPREADSHEET_ID, sheets)

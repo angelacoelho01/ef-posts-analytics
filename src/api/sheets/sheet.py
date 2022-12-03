@@ -22,8 +22,11 @@ class Sheet:
     def add_sheet(self, service, spreadsheet_id):
         return AddSheet(self.name).send_request(service, spreadsheet_id)
 
-    def update_sheet(self, service, spreadsheet_id):
-        self.add_sheet(service, spreadsheet_id)
+    def update_sheet(self, service, spreadsheet_id, all_sheets):
+        # Check if sheet already exists in the spreadsheet
+        if (self.name not in all_sheets):
+            self.add_sheet(service, spreadsheet_id)
+            
         service.spreadsheets().values().update(
             spreadsheetId=spreadsheet_id,
             valueInputOption='USER_ENTERED',
