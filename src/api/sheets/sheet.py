@@ -30,7 +30,7 @@ class Sheet:
         service.spreadsheets().values().update(
             spreadsheetId=spreadsheet_id,
             valueInputOption='USER_ENTERED',
-            range=self.name + '!' + CELL_RANGE,
+            range=self.name + "!" + CELL_RANGE,
             body={
                 'majorDimension': 'ROWS',
                 'values': self.get_values()

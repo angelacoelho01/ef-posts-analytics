@@ -1,0 +1,42 @@
+{
+    "requests":[
+        {
+            "updateCells":{
+                "rows":[
+                    {
+                        "values":[
+                            {
+                                "userEnteredFormat":{
+                                    "borders":{
+                                        "top":{
+                                            "style":"SOLID"
+                                        },
+                                        "bottom":{
+                                            "style":"SOLID"
+                                        },
+                                        "left":{
+                                            "style":"SOLID"
+                                        },
+                                        "right":{
+                                            "style":"SOLID"
+                                        }
+                                    },
+                                    "verticalAlignment":"MIDDLE",
+                                    "wrapStrategy": "WRAP"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "fields":"*",
+                "range":{
+                    "sheetId":"SHEET_ID",
+                    "startRowIndex":"START_ROW_INDEX",
+                    "endRowIndex": "END_ROW_INDEX",
+                    "startColumnIndex":"START_COLUMN_INDEX",
+                    "endColumnIndex":"END_COLUMN_INDEX"
+                }
+            }
+        }
+    ]
+}

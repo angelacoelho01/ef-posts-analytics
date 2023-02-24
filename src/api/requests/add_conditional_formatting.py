@@ -1,9 +1,9 @@
 from utils import *
 from requests.request import Request
 
-DEFAULT_TEMPLATE_PATH = r'src\api\requests\templates\conditional_formatting_between.json'
+DEFAULT_TEMPLATE_PATH = r'src\api\requests\templates\addConditionalFormatRule.json'
 
-class IsBetween(Request):
+class AddConditionalFormatting(Request):
     def __init__(self, sheet_id, start_column_index, end_column_index, start_row_index, end_row_index, 
                     lower_bound, upper_bound, color, template_path=DEFAULT_TEMPLATE_PATH,):
         self.sheet_id = sheet_id
@@ -54,3 +54,12 @@ class IsBetween(Request):
             'GREEN': self.color['green'],
             'BLUE': self.color['blue']
         }
+    
+    def set_lower_bound(self, lower_bound):
+        self.lower_bound = lower_bound
+
+    def set_upper_bound(self, upper_bound):
+        self.upper_bound = upper_bound
+
+    def set_color(self, color):
+        self.color = color

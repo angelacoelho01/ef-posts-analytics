@@ -3,7 +3,8 @@
         {
             "addSheet":{
                 "properties":{
-                    "title":"SHEET_NAME"
+                    "title":"SHEET_NAME",
+                    "sheetType":"GRID"
                 }
             }
         }
